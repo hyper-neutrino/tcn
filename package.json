@@ -1,0 +1,17 @@
+{
+    "name": "tcn",
+    "version": "1.0.0",
+    "description": "TCN Global Functionalities",
+    "main": "src/main.js",
+    "private": true,
+    "type": "module",
+    "scripts": {
+        "start": "node src/main.js"
+    },
+    "dependencies": {
+        "@discordjs/rest": "^0.2.0-canary.0",
+        "discord-api-types": "^0.26.1",
+        "discord.js": "^13.6.0",
+        "pg": "^8.7.3"
+    }
+}
