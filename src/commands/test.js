@@ -1,3 +1,7 @@
+const { Success } = require("../errors");
+
+exports.permission = "server-settings";
+
 exports.execute = async function (ctx, args) {
-    await ctx.reply("Hello, World!");
+    throw new Success("Hello, World!");
 };

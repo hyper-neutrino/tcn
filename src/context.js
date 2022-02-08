@@ -9,7 +9,7 @@ exports.Context = class {
     }
 
     async reply(item) {
-        if (typeof options == "string" || item instanceof String) {
+        if (typeof item == "string" || item instanceof String) {
             item = { content: item };
         }
         item.allowedMentions ||= {};

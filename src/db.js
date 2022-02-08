@@ -1,19 +1,25 @@
 const { Client } = require("pg");
 const { db_options } = require("../config.json");
+const { ArgumentError } = require("./errors");
 
 const client = (exports.client = new Client(db_options));
-client.connect();
 
 // prefix
 {
     client.query(
         `CREATE TABLE IF NOT EXISTS prefix (
-            guild_id VARCHAR(32) PRIMARY KEY,
-            prefix VARCHAR(8)
+            guild_id VARCHAR(32),
+            prefix VARCHAR(8),
+            PRIMARY KEY (guild_id)
         )`
     );
 
     exports.set_prefix = async function (guild, prefix) {
+        if (prefix.length > 8 || prefix.length < 1) {
+            throw new ArgumentError(
+                "Prefix must be between 1 and 8 characters long."
+            );
+        }
         await client.query(
             `INSERT INTO prefix (
                 guild_id, prefix
@@ -23,24 +29,42 @@ client.connect();
             [guild_id, prefix]
         );
     };
+
+    exports.get_prefix = async function (guild) {
+        return (
+            await client.query(
+                `SELECT COALESCE(MAX(prefix), 'tcn#') FROM prefix WHERE guild_id = $1`,
+                [guild.id]
+            )
+        ).rows[0].coalesce;
+    };
 }
 
 // permissions
 {
     client.query(
         `CREATE TABLE IF NOT EXISTS role_permissions (
-            guild_id VARCHAR(32) PRIMARY KEY,
-            role_id VARCHAR(32) PRIMARY KEY,
-            permission VARCHAR(32) PRIMARY KEY
+            guild_id VARCHAR(32),
+            role_id VARCHAR(32),
+            permission VARCHAR(32),
+            PRIMARY KEY (guild_id, role_id, permission)
         )`
     );
 
     client.query(
         `CREATE TABLE IF NOT EXISTS user_permissions (
-            guild_id VARCHAR(32) PRIMARY KEY,
-            user_id VARCHAR(32) PRIMARY KEY,
-            permission VARCHAR(32) PRIMARY KEY,
-            allow BOOLEAN
+            guild_id VARCHAR(32),
+            user_id VARCHAR(32),
+            permission VARCHAR(32),
+            allow BOOLEAN,
+            PRIMARY KEY (guild_id, user_id, permission)
+        )`
+    );
+
+    client.query(
+        `CREATE TABLE IF NOT EXISTS admins (
+            user_id VARCHAR(32),
+            PRIMARY KEY (user_id)
         )`
     );
 
@@ -119,5 +143,27 @@ client.connect();
             ).rows.map((row) => row.role_id)
         );
         return member.roles.cache.some((role) => role_ids.has(role.id));
+    };
+
+    exports.add_admin = async function (user) {
+        await client.query(
+            `INSERT INTO admins (user_id) VALUES ($1) ON CONFLICT (user_id) DO UPDATE user_id = user_id`,
+            [user.id]
+        );
+    };
+
+    exports.remove_admin = async function (user) {
+        await client.query(`DELETE FROM admins WHERE user_id = $1`, [user.id]);
+    };
+
+    exports.is_admin = async function (user) {
+        return (
+            (
+                await client.query(
+                    `SELECT COUNT(*) FROM admins WHERE user_id = $1`,
+                    [user.id]
+                )
+            ).rows[0].count > 0
+        );
     };
 }
