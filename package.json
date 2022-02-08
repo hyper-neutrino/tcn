@@ -4,7 +4,7 @@
     "description": "TCN Global Functionalities",
     "main": "src/main.js",
     "private": true,
-    "type": "module",
+    "type": "commonjs",
     "scripts": {
         "start": "node src/main.js"
     },
