@@ -1,0 +1,13 @@
+extends layout
+
+block title
+    title TCN Staff Dashboard
+
+block main
+    .container
+        h3 You are logged in as #{req.user.tag}.
+        br
+        h5 Create Incident Report
+        ul.browser-default
+            for server in servers
+                li: a(href=`/reports/${server.id}/create/`)= server.name

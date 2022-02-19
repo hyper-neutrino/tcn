@@ -1,0 +1,47 @@
+include mixins
+
+doctype html
+html
+    head
+        meta(charset="utf-8")
+        meta(name="description", content="TCN Staff Dashboard")
+        meta(name="author", content="hyper-neutrino")
+        meta(name="viewport", content="width=device-width, initial-scale=1.0")
+
+        //- Discord Embed Stuff
+        meta(property="og:title", content="TCN Staff Dashboard")
+        meta(property="og:description", content="TCN Staff Dashboard for Global Information Sharing")
+        meta(property="og:url", content=req.get("host"))
+        meta(property="og:image", content="/static/images/discord-banner.png")
+        meta(name="theme-color", data-react-hemlet="true", content="#ff0088")
+        meta(name="twitter:card", content="summary_large_image")
+
+        //- Favicon
+        link(rel="shortcut icon", type="image/png", href="/static/images/favicon.png")
+
+        //- CSS
+        +importCSS("/static/styles/base.css")
+
+        //- External Styling
+        +importCSS("https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css")
+        +importCSS("https://fonts.googleapis.com/icon?family=Material+Icons")
+
+        //- External Scripts
+        script(src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js")
+        script(src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js")
+
+        //- JavaScript
+        script(src="/static/scripts/base.js")
+
+        //- Extra Dependencies
+        block dependencies
+
+        block title
+            title= title
+    body
+        header
+            for flash in flashes
+                span.flash(style="display: none", data-category=flash.category)!= flash.message
+            block header
+        main
+            block main

@@ -14,7 +14,11 @@ exports.Context = class {
         }
         item.allowedMentions ||= {};
         item.allowedMentions.repliedUser = false;
-        return await this.message.reply(item);
+        try {
+            return await this.message.reply(item);
+        } catch {
+            return await this.channel.send(item);
+        }
     }
 
     async send(item) {

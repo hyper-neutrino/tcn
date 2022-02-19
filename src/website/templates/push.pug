@@ -1,0 +1,54 @@
+extends layout
+
+block dependencies
+    script(src="/static/scripts/push.js")
+
+block title
+    title TCN Create Report
+
+block main
+    .container
+        h3 Hello, #{req.user.tag}.
+        br
+        h5
+            | You are creating an incident report for: 
+            b= req.guild.name
+        br
+        a.btn.blue.darken-4(href="/") Return to home page
+        br
+        br
+        form(method="post")
+            h5 Tags
+            .row
+                for tag in tags
+                    .col.s6.m4.l3
+                        p
+                            label
+                                input.tagcheckbox(type="checkbox", name=`tag-${tag}`, checked=entry && entry.tags.has(tag))
+                                span.white-text= tag
+            h5 Summary
+            p A short summary of what happened. The receiving server should be able to decide if they want to look more into this from the summary.
+            .row
+                +textarea("summary", "", 4096, true)
+            h5 Details / Evidence / Context
+            p The full details of what happened. You can also create a Google Doc and link it here, for example.
+            .row
+                +textarea("details", "", 65536, true)
+            h5 Recommendations
+            p Recommendations for what the receiving server should do (advice, not instructions).
+            .row
+                +textarea("recommendations", "", 1024, true)
+            h5 Action List
+            p Buttons will be made available to receiving servers that allow them to approve these actions.
+            p The input will be parsed by taking all consecutive blocks of digits as IDs. Please check over your input carefully before submitting.
+            .row
+                for name, id in { bans: "Bans", kicks: "Kicks", mutes: "Mutes" }
+                    .col.s12.l4
+                        +textarea(id, name, undefined, false)
+            .row
+                button.btn.waves-effect.waves-light(name="action", type="submit")
+                    if entry
+                        | UPDATE
+                    else
+                        | SUBMIT FOR OBSERVER REVIEW
+    +spacer

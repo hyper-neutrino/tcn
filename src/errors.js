@@ -13,7 +13,7 @@ exports.CommandSyntaxError = class extends StatusError {
         super(
             "RED",
             "❌",
-            title === undefined ? "Command Syntax Error" : title,
+            title === undefined && message ? "Command Syntax Error" : title,
             message,
             fields
         );
@@ -25,7 +25,7 @@ exports.ArgumentError = class extends StatusError {
         super(
             "RED",
             "❌",
-            title === undefined ? "Argument Error" : title,
+            title === undefined && message ? "Argument Error" : title,
             message,
             fields
         );
@@ -37,7 +37,7 @@ exports.InternalError = class extends StatusError {
         super(
             "AQUA",
             "❗",
-            title === undefined ? "Internal Error" : title,
+            title === undefined && message ? "Internal Error" : title,
             message,
             fields
         );
@@ -49,7 +49,7 @@ exports.PermissionError = class extends StatusError {
         super(
             "PURPLE",
             "⛔",
-            title === undefined ? "Permission Error" : title,
+            title === undefined && message ? "Permission Error" : title,
             message,
             fields
         );
@@ -61,7 +61,7 @@ exports.Canceled = class extends StatusError {
         super(
             "RED",
             "🟥",
-            title === undefined ? "Canceled" : title,
+            title === undefined && message ? "Canceled" : title,
             message,
             fields
         );
@@ -73,7 +73,7 @@ exports.TimedOut = class extends StatusError {
         super(
             "BLUE",
             "⌛",
-            title === undefined ? "Timed Out" : title,
+            title === undefined && message ? "Timed Out" : title,
             message,
             fields
         );
@@ -85,7 +85,7 @@ exports.Info = class extends StatusError {
         super(
             "GREY",
             "ℹ️",
-            title === undefined ? "Info" : title,
+            title === undefined && message ? "Info" : title,
             message,
             fields
         );
@@ -97,7 +97,7 @@ exports.PartialSuccess = class extends StatusError {
         super(
             "GOLD",
             "🟨",
-            title === undefined ? "Partial Success" : title,
+            title === undefined && message ? "Partial Success" : title,
             message,
             fields
         );
@@ -109,7 +109,19 @@ exports.Success = class extends StatusError {
         super(
             "GREEN",
             "✅",
-            title === undefined ? "Success" : title,
+            title === undefined && message ? "Success" : title,
+            message,
+            fields
+        );
+    }
+};
+
+exports.Usage = class extends StatusError {
+    constructor(message, title, fields) {
+        super(
+            "LUMINOUS_VIVID_PINK",
+            "ℹ️",
+            title === undefined ? "Usage" : title,
             message,
             fields
         );

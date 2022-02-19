@@ -1,0 +1,13 @@
+extends layout
+
+block main
+    meta(
+        http-equiv="Refresh",
+        content=`0; url='https://discord.com/api/v8/oauth2/authorize?client_id=${
+            client_id
+        }&redirect_uri=${
+            domain
+        }/discord-oauth%2F&response_type=code&scope=identify%20guilds&state=${
+            state
+        }'`
+    )

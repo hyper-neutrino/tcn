@@ -1,0 +1,43 @@
+extends layout
+
+block title
+    title TCN Report
+
+block main
+    .container
+        h3 Hello, #{req.user.tag}.
+        br
+        h5
+            | Incident report from 
+            if guild
+                = guild.name
+            else
+                | [Unknown Guild]
+        br
+        | Published by 
+        if submitter
+            | #{submitter.tag} (#{submitter.id})
+        else
+            | [Unknown User]
+        br
+        br
+        a.btn.blue.darken-4(href="/") Return to home page
+        br
+        br
+        for tag in [...report.tags].sort()
+            span.tag= tag
+        br
+        h6: b Summary
+        p.boxed!= report.body.summary.replaceAll("\n", "<br />")
+        h6: b Details / Evidence / Context
+        p.boxed!= report.body.details.replaceAll("\n", "<br />")
+        h6: b Recommendations
+        p.boxed!= report.body.recommendations.replaceAll("\n", "<br />")
+        if report.actions
+            h6: b Actions
+            .row
+                for category, index in ["mute", "kick", "ban"]
+                    .col.s4
+                        b= ["Mute", "Kick", "Ban"][index]
+                        br
+                        = report.actions.filter(action => action.type == category).map(action => action.user_id).join(", ") || "(none)"

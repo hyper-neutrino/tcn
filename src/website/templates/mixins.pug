@@ -1,0 +1,11 @@
+mixin importCSS(file)
+    link(rel="stylesheet", type="text/css", href=file)
+
+mixin textarea(id, desc, maxlen, required)
+    .row
+        .input-field.col.s12
+            textarea.materialize-textarea(id=id, name=id, class={charcount: maxlen}, data-length=maxlen, required=required)!= appl && appl[id]
+            label(for=id)!= desc
+    
+mixin spacer
+    div(style="height: 20vh")
